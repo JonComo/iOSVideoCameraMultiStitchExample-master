@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12E55" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
+    </dependencies>
+    <scenes>
+        <!--Recording View Controller-->
+        <scene sceneID="5">
+            <objects>
+                <viewController id="2" customClass="RecordingViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="3">
+                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <progressView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ntb-LU-Pql"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lQf-kK-9Ax">
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D1d-DO-atg">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="8D7-Mk-scq"/>
+                                    <constraint firstAttribute="height" constant="29" id="uJN-wJ-HPE"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="X">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="cancelAction:" destination="2" eventType="touchUpInside" id="NlH-fY-MNw"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BsD-Q3-9dp">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="320" id="0B4-mc-bUj"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="recordTouchCancel:" destination="2" eventType="touchCancel" id="Ufb-jF-Iz5"/>
+                                    <action selector="recordTouchDown:" destination="2" eventType="touchDown" id="n6p-PX-DnY"/>
+                                    <action selector="recordTouchUp:" destination="2" eventType="touchUpInside" id="DpT-wd-wli"/>
+                                    <action selector="recordTouchUp:" destination="2" eventType="touchUpOutside" id="SB8-uZ-5Eh"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aan-rF-3bi">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="62" id="NPE-dC-bKI"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Play">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="disabled">
+                                    <color key="titleColor" red="1" green="0.035351606610000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="saveRecording:" destination="2" eventType="touchUpInside" id="nUc-d0-0Ym"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lK0-bS-klL">
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Flip">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="flipCamera:" destination="2" eventType="touchUpInside" id="wuU-9l-0yG"/>
+                                </connections>
+                            </button>
+                            <collectionView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceHorizontal="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="sN2-Eo-oZA">
+                                <color key="backgroundColor" white="0.92589530109489049" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="1UR-Zl-XqP"/>
+                                </constraints>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="t65-jz-F7Z">
+                                    <size key="itemSize" width="60" height="60"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cellClip" id="O0H-Rk-X4K">
+                                        <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" tag="100" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c8f-3H-j6B"/>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <color key="backgroundColor" white="0.79907048357664234" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="c8f-3H-j6B" firstAttribute="top" secondItem="O0H-Rk-X4K" secondAttribute="top" type="default" id="DK5-ZD-ePb"/>
+                                            <constraint firstItem="c8f-3H-j6B" firstAttribute="bottom" secondItem="O0H-Rk-X4K" secondAttribute="bottom" type="default" id="Fj4-FS-48V"/>
+                                            <constraint firstItem="c8f-3H-j6B" firstAttribute="trailing" secondItem="O0H-Rk-X4K" secondAttribute="trailing" type="default" id="iHp-Qx-0lp"/>
+                                            <constraint firstItem="c8f-3H-j6B" firstAttribute="leading" secondItem="O0H-Rk-X4K" secondAttribute="leading" type="default" id="vca-ue-p9x"/>
+                                        </constraints>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="lQf-kK-9Ax" firstAttribute="leading" secondItem="3" secondAttribute="leading" type="default" id="Bpz-cN-Y9C"/>
+                            <constraint firstItem="ntb-LU-Pql" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="E2b-Es-68x"/>
+                            <constraint firstItem="sN2-Eo-oZA" firstAttribute="leading" secondItem="3" secondAttribute="leading" type="default" id="ESc-Vy-lAa"/>
+                            <constraint firstItem="lK0-bS-klL" firstAttribute="leading" secondItem="aan-rF-3bi" secondAttribute="trailing" constant="8" symbolic="YES" type="default" id="Ek8-V2-e8X"/>
+                            <constraint firstAttribute="trailing" secondItem="D1d-DO-atg" secondAttribute="trailing" constant="16" id="GGt-xI-7Eg"/>
+                            <constraint firstItem="BsD-Q3-9dp" firstAttribute="leading" secondItem="3" secondAttribute="leading" type="default" id="HDr-Yi-Idk"/>
+                            <constraint firstItem="BsD-Q3-9dp" firstAttribute="trailing" secondItem="3" secondAttribute="trailing" type="default" id="ZdH-Dm-oW4"/>
+                            <constraint firstItem="D1d-DO-atg" firstAttribute="top" secondItem="3" secondAttribute="top" constant="14" id="aWk-PX-IYq"/>
+                            <constraint firstItem="lQf-kK-9Ax" firstAttribute="top" secondItem="ntb-LU-Pql" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="eGO-X5-eh9"/>
+                            <constraint firstItem="ntb-LU-Pql" firstAttribute="top" secondItem="3" secondAttribute="top" constant="61" id="eUx-fX-FmN"/>
+                            <constraint firstItem="BsD-Q3-9dp" firstAttribute="bottom" secondItem="lQf-kK-9Ax" secondAttribute="bottom" type="default" id="kdl-By-msb"/>
+                            <constraint firstAttribute="bottom" secondItem="aan-rF-3bi" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="luh-2a-bDU"/>
+                            <constraint firstItem="sN2-Eo-oZA" firstAttribute="top" secondItem="3" secondAttribute="top" constant="400" id="mF5-uB-mJw"/>
+                            <constraint firstAttribute="bottom" secondItem="lK0-bS-klL" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="nLu-9u-9uM"/>
+                            <constraint firstItem="aan-rF-3bi" firstAttribute="leading" secondItem="3" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="oWp-VD-Kty"/>
+                            <constraint firstAttribute="trailing" secondItem="ntb-LU-Pql" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="sLY-hU-fwq"/>
+                            <constraint firstItem="sN2-Eo-oZA" firstAttribute="trailing" secondItem="3" secondAttribute="trailing" type="default" id="x9D-xF-rlm"/>
+                            <constraint firstItem="lQf-kK-9Ax" firstAttribute="trailing" secondItem="3" secondAttribute="trailing" type="default" id="xIG-g3-WYd"/>
+                            <constraint firstItem="BsD-Q3-9dp" firstAttribute="top" secondItem="ntb-LU-Pql" secondAttribute="bottom" constant="8" symbolic="YES" type="default" id="zLZ-d7-qON"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="cancelButton" destination="D1d-DO-atg" id="g3r-va-XKJ"/>
+                        <outlet property="collectionViewClips" destination="sN2-Eo-oZA" id="Acn-m0-FYn"/>
+                        <outlet property="recordButton" destination="BsD-Q3-9dp" id="ebx-Vu-0Fe"/>
+                        <outlet property="saveButton" destination="aan-rF-3bi" id="wRq-12-say"/>
+                        <outlet property="videoPreviewView" destination="lQf-kK-9Ax" id="yk5-RI-xLf"/>
+                        <outlet property="videoRecrodingProgress" destination="ntb-LU-Pql" id="V2O-C4-BlT"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="638" y="168"/>
+        </scene>
+    </scenes>
+    <classes>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+        <class className="RecordingViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/RecordingViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="cancelAction:"/>
+                <relationship kind="action" name="flipCamera:"/>
+                <relationship kind="action" name="recordTouchCancel:"/>
+                <relationship kind="action" name="recordTouchDown:"/>
+                <relationship kind="action" name="recordTouchUp:"/>
+                <relationship kind="action" name="saveRecording:"/>
+                <relationship kind="outlet" name="cancelButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="recordButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="saveButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="videoPreviewView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="videoRecrodingProgress" candidateClass="UIProgressView"/>
+            </relationships>
+        </class>
+        <class className="UICollectionReusableView" superclassName="UIView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionReusableView.h"/>
+        </class>
+        <class className="UICollectionViewCell" superclassName="UICollectionReusableView">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewCell.h"/>
+        </class>
+        <class className="UICollectionViewFlowLayout" superclassName="UICollectionViewLayout">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewFlowLayout.h"/>
+        </class>
+        <class className="UICollectionViewLayout" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/UICollectionViewLayout.h"/>
+        </class>
+    </classes>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>
