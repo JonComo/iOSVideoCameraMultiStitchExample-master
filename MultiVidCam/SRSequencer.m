@@ -1,28 +1,14 @@
 //
-// Copyright (c) 2013 Carson McDonald
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
-// and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions
-// of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
-// TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
-// CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-// DEALINGS IN THE SOFTWARE.
+// Copyright (c) 2013 Jon Como
 //
 
-#import "VideoCameraInputManager.h"
+#import "SRSequencer.h"
 
 #import "AVAssetStitcher.h"
 
 #import <MobileCoreServices/UTCoreTypes.h>
 
-@interface VideoCameraInputManager (Private) <UICollectionViewDataSource>
+@interface SRSequencer (Private) <UICollectionViewDataSource>
 
 - (void)startNotificationObservers;
 - (void)endNotificationObservers;
@@ -37,7 +23,7 @@
 
 @end
 
-@implementation VideoCameraInputManager
+@implementation SRSequencer
 {
     bool setupComplete;
     
@@ -51,6 +37,7 @@
     id deviceConnectedObserver;
     id deviceDisconnectedObserver;
     id deviceOrientationDidChangeObserver;
+    id clipThummbnailObserver;
     
     long uniqueTimestamp;
     int currentRecordingSegment;
@@ -61,7 +48,7 @@
     BOOL isRecording;
 }
 
-- (id)initWithDelegate:(id<VideoCameraInputManagerDelegate>)managerDelegate
+- (id)initWithDelegate:(id<SRSequencerDelegate>)managerDelegate
 {
     if (self = [super init])
     {
@@ -199,6 +186,8 @@
 
 - (void)startRecording
 {
+    if (![self.captureSession isRunning]) return;
+    
     isRecording = YES;
     
     [self.clips removeAllObjects];
@@ -235,6 +224,7 @@
 - (void)resumeRecording
 {
     if (isRecording) return;
+    if (![self.captureSession isRunning]) return;
     
     isRecording = YES;
     currentRecordingSegment++;
@@ -266,48 +256,17 @@
     [self.collectionViewClips reloadData];
 }
 
--(void)thumbnailFromURL:(NSURL *)url completion:(void (^)(UIImage *thumb))block
-{
-    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:url options:nil];
-    AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
-    generator.appliesPreferredTrackTransform = YES;
-    
-    CMTime thumbTime = CMTimeMakeWithSeconds(0,30);
-    
-    AVAssetImageGeneratorCompletionHandler handler = ^(CMTime requestedTime, CGImageRef im, CMTime actualTime, AVAssetImageGeneratorResult result, NSError *error)
-    {
-        
-        if (result != AVAssetImageGeneratorSucceeded) {
-            NSLog(@"couldn't generate thumbnail, error:%@", error);
-        }
-        
-        UIImage *thumb = [UIImage imageWithCGImage:im];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (block)
-                block(thumb);
-        });
-    };
-
-    CGSize maxSize = CGSizeMake(320, 180);
-    generator.maximumSize = maxSize;
-    [generator generateCGImagesAsynchronouslyForTimes:[NSArray arrayWithObject:[NSValue valueWithCMTime:thumbTime]] completionHandler:handler];
-    
-}
-
 - (void)finalizeRecordingToFile:(NSURL *)finalVideoLocationURL withVideoSize:(CGSize)videoSize withPreset:(NSString *)preset withCompletionHandler:(void (^)(NSError *error))completionHandler
 {
     //[self reset];
     
     NSError *error;
-    if([finalVideoLocationURL checkResourceIsReachableAndReturnError:&error])
-    {
+    if([finalVideoLocationURL checkResourceIsReachableAndReturnError:&error]){
         completionHandler([NSError errorWithDomain:@"Output file already exists." code:104 userInfo:nil]);
         return;
     }
     
-    if(inFlightWrites != 0)
-    {
+    if(inFlightWrites != 0){
         completionHandler([NSError errorWithDomain:@"Can't finalize recording unless all sub-recorings are finished." code:106 userInfo:nil]);
         return;
     }
@@ -349,6 +308,7 @@
             stitcherError = error;
             
         }];
+        
     }];
     
     if(stitcherError){
@@ -401,18 +361,14 @@
             NSLog(@"Error capturing output: %@", error);
         }
     }else{
-        [self thumbnailFromURL:movieFileOutput.outputFileURL completion:^(UIImage *thumb) {
-            SRClip *clip = [[SRClip alloc] initWithURL:fileURL thumbnail:thumb];
-            [self.clips addObject:clip];
-            
-            if ([self.delegate respondsToSelector:@selector(videoCameraInputManager:addedClip:)])
-                [self.delegate videoCameraInputManager:self addedClip:clip];
-            
-            [self.collectionViewClips reloadData];
-            [self.collectionViewClips scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:MAX(0,self.clips.count-1) inSection:0] atScrollPosition:UICollectionViewScrollPositionRight animated:YES];
-            
-            isRecording = NO;
-        }];
+        SRClip *clip = [[SRClip alloc] initWithURL:fileURL];
+        
+        if ([self.delegate respondsToSelector:@selector(sequencer:addedClip:)])
+            [self.delegate sequencer:self addedClip:clip];
+        
+        [self addClip:clip];
+        
+        isRecording = NO;
     }
     
     inFlightWrites--;
@@ -424,9 +380,14 @@
 {
     NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     
+    clipThummbnailObserver = [notificationCenter addObserverForName:SRClipNotificationDidGenerateThumbnail object:nil queue:nil usingBlock:^(NSNotification *note) {
+        [self.collectionViewClips reloadData];
+    }];
+    
     //
     // Reconnect to a device that was previously being used
     //
+    
     deviceConnectedObserver = [notificationCenter addObserverForName:AVCaptureDeviceWasConnectedNotification object:nil queue:nil usingBlock:^(NSNotification *notification) {
         
         AVCaptureDevice *device = [notification object];
@@ -478,6 +439,7 @@
     //
     // Disable inputs from removed devices that are being used
     //
+    
     deviceDisconnectedObserver = [notificationCenter addObserverForName:AVCaptureDeviceWasDisconnectedNotification object:nil queue:nil usingBlock:^(NSNotification *notification) {
         
         AVCaptureDevice *device = [notification object];
@@ -499,6 +461,7 @@
     // Track orientation changes. Note: This are pushed into the Quicktime video data and needs
     // to be used at decoding time to transform the video into the correct orientation.
     //
+    
     orientation = AVCaptureVideoOrientationPortrait;
     deviceOrientationDidChangeObserver = [notificationCenter addObserverForName:UIDeviceOrientationDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification *note) {
         
@@ -522,12 +485,15 @@
         }
         
     }];
+    
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 }
 
 - (void)endNotificationObservers
 {
     [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:clipThummbnailObserver];
     
     [[NSNotificationCenter defaultCenter] removeObserver:deviceConnectedObserver];
     [[NSNotificationCenter defaultCenter] removeObserver:deviceDisconnectedObserver];
@@ -637,6 +603,25 @@
     SRClip *clip = [self.clips objectAtIndex:fromIndexPath.item];
     [self.clips removeObjectAtIndex:fromIndexPath.item];
     [self.clips insertObject:clip atIndex:toIndexPath.item];
+}
+
+#pragma Clip Operations
+
+-(void)addClip:(SRClip *)clip
+{
+    [self.clips addObject:clip];
+    
+    [self.collectionViewClips reloadData];
+    [self.collectionViewClips scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:MAX(0,self.clips.count-1) inSection:0] atScrollPosition:UICollectionViewScrollPositionRight animated:YES];
+}
+
+-(void)duplicateClipAtIndex:(NSInteger)index
+{
+    SRClip *clipAtIndex = self.clips[index];
+    
+    SRClip *newClip = [clipAtIndex duplicate];
+    
+    [self addClip:newClip];
 }
 
 @end

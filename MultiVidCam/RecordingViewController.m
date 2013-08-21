@@ -23,9 +23,11 @@
 
 #import "LXReorderableCollectionViewFlowLayout.h"
 
-#import "VideoCameraInputManager.h"
+#import "MBProgressHUD.h"
 
-@interface RecordingViewController (Private) <VideoCameraInputManagerDelegate, UICollectionViewDelegateFlowLayout>
+#import "SRSequencer.h"
+
+@interface RecordingViewController (Private) <SRSequencerDelegate, UICollectionViewDelegateFlowLayout>
 
 - (void)updateProgress:(NSTimer *)timer;
 - (void)saveOutputToAssetLibrary:(NSURL *)outputFileURL completionBlock:(void (^)(NSError *error))completed;
@@ -47,7 +49,7 @@
 
 @implementation RecordingViewController
 {
-    VideoCameraInputManager *videoCameraInputManager;
+    SRSequencer *sequencer;
     
     AVCaptureVideoPreviewLayer *captureVideoPreviewLayer;
     
@@ -64,8 +66,8 @@
     
     self.videoRecrodingProgress.alpha = 0;
     
-    videoCameraInputManager = [[VideoCameraInputManager alloc] initWithDelegate:self];
-    videoCameraInputManager.collectionViewClips = collectionViewClips;
+    sequencer = [[SRSequencer alloc] initWithDelegate:self];
+    sequencer.collectionViewClips = collectionViewClips;
     
     layout = [[LXReorderableCollectionViewFlowLayout alloc] init];
     [layout setMinimumInteritemSpacing:0];
@@ -74,14 +76,14 @@
     
     collectionViewClips.delegate = self;
     
-    videoCameraInputManager.maxDuration = MAX_RECORDING_LENGTH;
-    videoCameraInputManager.asyncErrorHandler = ^(NSError *error) {
+    sequencer.maxDuration = MAX_RECORDING_LENGTH;
+    sequencer.asyncErrorHandler = ^(NSError *error) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error" message:error.domain delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alertView show];
     };
     
     NSError *error;
-    [videoCameraInputManager setupSessionWithPreset:CAPTURE_SESSION_PRESET
+    [sequencer setupSessionWithPreset:CAPTURE_SESSION_PRESET
                                   withCaptureDevice:INITIAL_CAPTURE_DEVICE_POSITION
                                       withTorchMode:INITIAL_TORCH_MODE
                                           withError:&error];
@@ -94,7 +96,7 @@
     }
     else
     {
-        captureVideoPreviewLayer = [AVCaptureVideoPreviewLayer layerWithSession:videoCameraInputManager.captureSession];
+        captureVideoPreviewLayer = [AVCaptureVideoPreviewLayer layerWithSession:sequencer.captureSession];
         
         self.videoPreviewView.layer.masksToBounds = YES;
         captureVideoPreviewLayer.frame = self.videoPreviewView.bounds;
@@ -105,7 +107,7 @@
         
         // Start the session. This is done asychronously because startRunning doesn't return until the session is running.
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [videoCameraInputManager.captureSession startRunning];
+            [sequencer.captureSession startRunning];
         });
         
         self.saveButton.hidden = YES;
@@ -114,7 +116,7 @@
 
 - (void)updateProgress:(NSTimer *)timer
 {
-    CMTime duration = [videoCameraInputManager totalRecordingDuration];
+    CMTime duration = [sequencer totalRecordingDuration];
     
     self.videoRecrodingProgress.progress = CMTimeGetSeconds(duration) / MAX_RECORDING_LENGTH;
     
@@ -135,9 +137,9 @@
     
     captureVideoPreviewLayer.frame = self.videoPreviewView.bounds;
     
-    if ([videoCameraInputManager.captureSession isInterrupted])
+    if ([sequencer.captureSession isInterrupted])
     {
-        [videoCameraInputManager.captureSession startRunning];
+        [sequencer.captureSession startRunning];
     }
 }
 
@@ -154,7 +156,7 @@
     
     self.videoRecrodingProgress.progress = 0.0;
 
-    [videoCameraInputManager reset];
+    [sequencer reset];
 }
 
 - (IBAction)recordTouchDown:(id)sender
@@ -165,40 +167,46 @@
                                                          userInfo:nil
                                                           repeats:YES];
     
-    if(videoCameraInputManager.isPaused){
-        [videoCameraInputManager resumeRecording];
+    if(sequencer.isPaused){
+        [sequencer resumeRecording];
     }else{
-        [videoCameraInputManager startRecording];
+        [sequencer startRecording];
     }
 }
 
 - (IBAction)recordTouchCancel:(id)sender
 {
     [progressUpdateTimer invalidate];
-    [videoCameraInputManager pauseRecording];
+    [sequencer pauseRecording];
 }
 
 - (IBAction)recordTouchUp:(id)sender
 {
     [progressUpdateTimer invalidate];
-    [videoCameraInputManager pauseRecording];
+    [sequencer pauseRecording];
 }
 
 - (IBAction)flipCamera:(id)sender
 {
-    [videoCameraInputManager flipCamera];
+    [sequencer flipCamera];
 }
 
 - (IBAction)saveRecording:(id)sender
 {
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.videoPreviewView animated:YES];
+    [hud setMode:MBProgressHUDModeIndeterminate];
+    [hud setLabelText:@"Rendering"];
+    
     self.saveButton.hidden = YES;
     
     NSURL *finalOutputFileURL = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@-%ld.mp4", NSTemporaryDirectory(), @"final", (long)[[NSDate date] timeIntervalSince1970]]];
     
-    [videoCameraInputManager finalizeRecordingToFile:finalOutputFileURL
+    [sequencer finalizeRecordingToFile:finalOutputFileURL
                                        withVideoSize:CGSizeMake(500, 500)
                                           withPreset:AVAssetExportPreset640x480
-                               withCompletionHandler:^(NSError *error) {
+                                            withCompletionHandler:^(NSError *error)
+    {
+        [MBProgressHUD hideAllHUDsForView:self.videoPreviewView animated:YES];
         
         if(error)
         {
@@ -236,6 +244,11 @@
     }];
 }
 
+- (IBAction)duplicate:(id)sender
+{
+    [sequencer duplicateClipAtIndex:MAX(0,sequencer.clips.count-1)];
+}
+
 - (void)saveOutputToAssetLibrary:(NSURL *)outputFileURL completionBlock:(void (^)(NSError *error))completed
 {
     ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
@@ -247,7 +260,7 @@
 
 #pragma videoCameraInputManagerDelegate
 
--(void)videoCameraInputManager:(VideoCameraInputManager *)manager addedClip:(SRClip *)clip
+-(void)videoCameraInputManager:(SRSequencer *)manager addedClip:(SRClip *)clip
 {
     [collectionViewClips reloadData];
 }
@@ -256,7 +269,7 @@
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    [videoCameraInputManager.clips removeObjectAtIndex:indexPath.row];
+    [sequencer.clips removeObjectAtIndex:indexPath.row];
     [collectionView deleteItemsAtIndexPaths:@[indexPath]];
 }
 

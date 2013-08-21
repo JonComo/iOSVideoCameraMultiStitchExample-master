@@ -8,11 +8,17 @@
 
 #import <Foundation/Foundation.h>
 
+#define SRClipNotificationDidGenerateThumbnail @"clipGeneratedThumbnail"
+
 @interface SRClip : NSObject
 
 @property (nonatomic, strong) UIImage *thumbnail;
 @property (nonatomic, strong) NSURL *URL;
 
--(id)initWithURL:(NSURL *)URL thumbnail:(UIImage *)thumbnail;
+-(id)initWithURL:(NSURL *)URL;
+
++(NSURL *)uniqueURLInDirectory:(NSString *)directory;
+
+-(SRClip *)duplicate;
 
 @end

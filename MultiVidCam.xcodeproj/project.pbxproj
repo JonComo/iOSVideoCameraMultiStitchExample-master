@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		8648920517C414AB007FCBA4 /* SRClip.m in Sources */ = {isa = PBXBuildFile; fileRef = 8648920417C414AB007FCBA4 /* SRClip.m */; };
 		8648920C17C42533007FCBA4 /* LXReorderableCollectionViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 8648920B17C42533007FCBA4 /* LXReorderableCollectionViewFlowLayout.m */; };
+		86B85A5917C53A9E0069FD99 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 86B85A5817C53A9E0069FD99 /* MBProgressHUD.m */; };
 		B6F62B6D16D1815D00E8B6C1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6F62B6C16D1815D00E8B6C1 /* UIKit.framework */; };
 		B6F62B6F16D1815D00E8B6C1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6F62B6E16D1815D00E8B6C1 /* Foundation.framework */; };
 		B6F62B7116D1815D00E8B6C1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6F62B7016D1815D00E8B6C1 /* CoreGraphics.framework */; };
@@ -21,7 +22,7 @@
 		B6F62B8616D1815E00E8B6C1 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6F62B8416D1815E00E8B6C1 /* MainStoryboard_iPhone.storyboard */; };
 		B6F62B8916D1815E00E8B6C1 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6F62B8716D1815E00E8B6C1 /* MainStoryboard_iPad.storyboard */; };
 		B6F62B8C16D1815E00E8B6C1 /* RecordingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6F62B8B16D1815E00E8B6C1 /* RecordingViewController.m */; };
-		B6F62B9416D1856800E8B6C1 /* VideoCameraInputManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B6F62B9316D1856800E8B6C1 /* VideoCameraInputManager.m */; };
+		B6F62B9416D1856800E8B6C1 /* SRSequencer.m in Sources */ = {isa = PBXBuildFile; fileRef = B6F62B9316D1856800E8B6C1 /* SRSequencer.m */; };
 		B6F62B9616D186AF00E8B6C1 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6F62B9516D186AF00E8B6C1 /* AVFoundation.framework */; };
 		B6F62B9816D186B400E8B6C1 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6F62B9716D186B400E8B6C1 /* QuartzCore.framework */; };
 		B6F62B9B16D186C300E8B6C1 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6F62B9916D186C300E8B6C1 /* CoreMedia.framework */; };
@@ -37,6 +38,9 @@
 		8648920417C414AB007FCBA4 /* SRClip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRClip.m; sourceTree = "<group>"; };
 		8648920A17C42533007FCBA4 /* LXReorderableCollectionViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LXReorderableCollectionViewFlowLayout.h; sourceTree = "<group>"; };
 		8648920B17C42533007FCBA4 /* LXReorderableCollectionViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LXReorderableCollectionViewFlowLayout.m; sourceTree = "<group>"; };
+		86B85A5717C53A9E0069FD99 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		86B85A5817C53A9E0069FD99 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		86B85A5B17C545FA0069FD99 /* Macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macros.h; sourceTree = "<group>"; };
 		B6F62B6916D1815D00E8B6C1 /* MultiVidCam.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MultiVidCam.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6F62B6C16D1815D00E8B6C1 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B6F62B6E16D1815D00E8B6C1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -54,8 +58,8 @@
 		B6F62B8816D1815E00E8B6C1 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
 		B6F62B8A16D1815E00E8B6C1 /* RecordingViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RecordingViewController.h; sourceTree = "<group>"; };
 		B6F62B8B16D1815E00E8B6C1 /* RecordingViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RecordingViewController.m; sourceTree = "<group>"; };
-		B6F62B9216D1856800E8B6C1 /* VideoCameraInputManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoCameraInputManager.h; sourceTree = "<group>"; };
-		B6F62B9316D1856800E8B6C1 /* VideoCameraInputManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCameraInputManager.m; sourceTree = "<group>"; };
+		B6F62B9216D1856800E8B6C1 /* SRSequencer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRSequencer.h; sourceTree = "<group>"; };
+		B6F62B9316D1856800E8B6C1 /* SRSequencer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRSequencer.m; sourceTree = "<group>"; };
 		B6F62B9516D186AF00E8B6C1 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		B6F62B9716D186B400E8B6C1 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		B6F62B9916D186C300E8B6C1 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -97,6 +101,15 @@
 			path = LXReorderableCollectionViewFlowLayout;
 			sourceTree = "<group>";
 		};
+		86B85A5A17C53AA20069FD99 /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				86B85A5717C53A9E0069FD99 /* MBProgressHUD.h */,
+				86B85A5817C53A9E0069FD99 /* MBProgressHUD.m */,
+			);
+			name = MBProgressHUD;
+			sourceTree = "<group>";
+		};
 		B6F62B6016D1815D00E8B6C1 = {
 			isa = PBXGroup;
 			children = (
@@ -117,6 +130,8 @@
 		B6F62B6B16D1815D00E8B6C1 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				86B85A5B17C545FA0069FD99 /* Macros.h */,
+				86B85A5A17C53AA20069FD99 /* MBProgressHUD */,
 				8648920917C42533007FCBA4 /* LXReorderableCollectionViewFlowLayout */,
 				B6F62BA116D186DF00E8B6C1 /* AssetsLibrary.framework */,
 				B6F62B9F16D186DA00E8B6C1 /* MobileCoreServices.framework */,
@@ -141,8 +156,8 @@
 				B6F62B8716D1815E00E8B6C1 /* MainStoryboard_iPad.storyboard */,
 				B6F62B8A16D1815E00E8B6C1 /* RecordingViewController.h */,
 				B6F62B8B16D1815E00E8B6C1 /* RecordingViewController.m */,
-				B6F62B9216D1856800E8B6C1 /* VideoCameraInputManager.h */,
-				B6F62B9316D1856800E8B6C1 /* VideoCameraInputManager.m */,
+				B6F62B9216D1856800E8B6C1 /* SRSequencer.h */,
+				B6F62B9316D1856800E8B6C1 /* SRSequencer.m */,
 				8648920317C414AB007FCBA4 /* SRClip.h */,
 				8648920417C414AB007FCBA4 /* SRClip.m */,
 				B6F62BA316D2DB3F00E8B6C1 /* AVAssetStitcher.h */,
@@ -236,10 +251,11 @@
 				B6F62B7916D1815E00E8B6C1 /* main.m in Sources */,
 				B6F62B7D16D1815E00E8B6C1 /* AppDelegate.m in Sources */,
 				B6F62B8C16D1815E00E8B6C1 /* RecordingViewController.m in Sources */,
-				B6F62B9416D1856800E8B6C1 /* VideoCameraInputManager.m in Sources */,
+				B6F62B9416D1856800E8B6C1 /* SRSequencer.m in Sources */,
 				B6F62BA516D2DB3F00E8B6C1 /* AVAssetStitcher.m in Sources */,
 				8648920517C414AB007FCBA4 /* SRClip.m in Sources */,
 				8648920C17C42533007FCBA4 /* LXReorderableCollectionViewFlowLayout.m in Sources */,
+				86B85A5917C53A9E0069FD99 /* MBProgressHUD.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
