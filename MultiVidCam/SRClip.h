@@ -17,7 +17,7 @@
 
 -(id)initWithURL:(NSURL *)URL;
 
-+(NSURL *)uniqueURLInDirectory:(NSString *)directory;
++(NSURL *)uniqueFileURLInDirectory:(NSString *)directory;
 
 -(SRClip *)duplicate;
 

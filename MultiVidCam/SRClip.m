@@ -82,7 +82,7 @@
     }];
 }
 
-+(NSURL *)uniqueURLInDirectory:(NSString *)directory
++(NSURL *)uniqueFileURLInDirectory:(NSString *)directory
 {
     NSURL *returnURL;
     int counter = 0;

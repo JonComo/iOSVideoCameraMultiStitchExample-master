@@ -8,6 +8,8 @@
 
 #import <MobileCoreServices/UTCoreTypes.h>
 
+#import "Macros.h"
+
 @interface SRSequencer (Private) <UICollectionViewDataSource>
 
 - (void)startNotificationObservers;
@@ -18,7 +20,6 @@
 
 - (AVCaptureConnection *)connectionWithMediaType:(NSString *)mediaType fromConnections:(NSArray *)connections;
 
-- (NSString *)constructCurrentTemporaryFilename;
 - (void)cleanTemporaryFiles;
 
 @end
@@ -39,7 +40,6 @@
     id deviceOrientationDidChangeObserver;
     id clipThummbnailObserver;
     
-    long uniqueTimestamp;
     int currentRecordingSegment;
     
     CMTime currentFinalDurration;
@@ -194,7 +194,6 @@
     
     [self.collectionViewClips reloadData];
     
-    uniqueTimestamp = [[NSDate date] timeIntervalSince1970];
     currentRecordingSegment = 0;
     _isPaused = NO;
     currentFinalDurration = kCMTimeZero;
@@ -205,7 +204,7 @@
         videoConnection.videoOrientation = orientation;
     }
     
-    NSURL *outputFileURL = [NSURL fileURLWithPath:[self constructCurrentTemporaryFilename]];
+    NSURL *outputFileURL = [SRClip uniqueFileURLInDirectory:DOCUMENTS];
     
     movieFileOutput.maxRecordedDuration = (_maxDuration > 0) ? CMTimeMakeWithSeconds(_maxDuration, 600) : kCMTimeInvalid;
     
@@ -230,7 +229,7 @@
     currentRecordingSegment++;
     _isPaused = NO;
     
-    NSURL *outputFileURL = [NSURL fileURLWithPath:[self constructCurrentTemporaryFilename]];
+    NSURL *outputFileURL = [SRClip uniqueFileURLInDirectory:DOCUMENTS];
     
     if(_maxDuration > 0)
     {
@@ -555,11 +554,6 @@
 }
 
 #pragma  mark - Temporary file handling functions
-
-- (NSString *)constructCurrentTemporaryFilename
-{
-    return [NSString stringWithFormat:@"%@%@-%ld-%d.mov", NSTemporaryDirectory(), @"recordingsegment", uniqueTimestamp, currentRecordingSegment];
-}
 
 - (void)cleanTemporaryFiles
 {
