@@ -137,8 +137,7 @@
     
     captureVideoPreviewLayer.frame = self.videoPreviewView.bounds;
     
-    if ([sequencer.captureSession isInterrupted])
-    {
+    if ([sequencer.captureSession isInterrupted]){
         [sequencer.captureSession startRunning];
     }
 }
@@ -256,13 +255,6 @@
     [library writeVideoAtPathToSavedPhotosAlbum:outputFileURL completionBlock:^(NSURL *assetURL, NSError *error) {
         completed(error);
     }];
-}
-
-#pragma videoCameraInputManagerDelegate
-
--(void)videoCameraInputManager:(SRSequencer *)manager addedClip:(SRClip *)clip
-{
-    [collectionViewClips reloadData];
 }
 
 #pragma UICollectionViewDelegate
